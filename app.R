@@ -316,7 +316,6 @@ server <- function(input, output, session){##1
     return((HTML(readLines('https://statsframe.com/qa/'))))
   }
   output$QA<-renderUI({
-    #x <- input$test  
     getPageQA()
   })
   
@@ -324,7 +323,6 @@ server <- function(input, output, session){##1
     return((HTML(readLines('https://statsframe.com/knowledgebase/'))))
   }
   output$KB<-renderUI({
-    #x <- input$test  
     getPageKB()
   })
   
@@ -1158,7 +1156,6 @@ server <- function(input, output, session){##1
         return({})
       }else{
         
-        #browser()
         source("./R_Modules/Linear_Regression/reg.R")
         depvar <<- input$depvar
         reg.res <<- reg(my.data(),input$depvar,input$indvars,NULL)
