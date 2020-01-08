@@ -3,17 +3,13 @@ source("libraries.R")
 setwd(WD <<- getwd())
 options(digits.secs = 6)
 
-#logofile <<- file.path(getwd(),"www", "LOGO","logo.png")
 HEADER <- FALSE
 keep.id.column <- TRUE
 
 my.OS <<- Sys.info()['sysname']
 
-#browser()
-
 ui <- dashboardPage(skin='blue',
                     dashboardHeader( title="Statsframe"
-                                     #,tags$head(tags$img(src=logofile, height='50',width='400'))#termina laprimera pagina
                                      
                     ),
                     dashboardSidebar(fileInput(inputId = "data.file", label=h3("Upload your data")),
@@ -33,7 +29,6 @@ ui <- dashboardPage(skin='blue',
                                      #                    selected = c(1)),
                                      br(),
                                      shinySaveButton('save', label='Save Report', title='Save as...', filetype = list(word = "docx")),
-                                     #actionButton("goreport","Generate Report!",width = '75%'),
                                      p()
                     ),#cierra el sidebar
                     dashboardBody(
@@ -178,10 +173,6 @@ ui <- dashboardPage(skin='blue',
                                   ),
                                   p(), 
                                   fluidRow(#fluidRow
-                                    # box(
-                                    #   title = "Fig 1", width = 4, solidHeader = TRUE, status = "primary",
-                                    #   plotOutput("ClusteringHieraSingle")
-                                    # ),
                                     box(
                                       title = "Fig 1", width = 4,solidHeader = TRUE,status = "primary",
                                       withSpinner(plotOutput("ClusteringHieraSingle"), color="#F58F4F")
@@ -194,8 +185,6 @@ ui <- dashboardPage(skin='blue',
                                       title = "Fig 3", width = 4,solidHeader = TRUE,status = "primary",
                                       withSpinner(plotOutput("kmeans"), color="#F58F4F")
                                   )
-                                  
-                                  #box(verbatimTextOutput("Clustering"),status = "primary",width = 12)
                         )),
                         
                         tabPanel( "Classifier Analysis", 
@@ -262,8 +251,6 @@ ui <- dashboardPage(skin='blue',
                         #)
                         tabPanel( "Q&A",
                                   htmlOutput("QA")
-                                  
-                                  #         box(verbatimTextOutput("Classifier Analysis"),status = "primary",width = 12)
                         ),
                         tabPanel( "Knowledge Base",
                                   htmlOutput("KB")          
@@ -361,22 +348,17 @@ server <- function(input, output, session){##1
       c<- nchar(gsub(",", "", a[1]))
       d<- nchar(gsub("\t", "", a[1]))
       if(b<c&b<d){
-        #r <- read.table(file1$datapath,sep=";",stringsAsFactors = FALSE,nrows=1,na.strings = c("NA",""))
         r <- read.table(file1$datapath,sep=";",stringsAsFactors = FALSE,nrows=1)
         
         SEP=";"
       }else if(c<b&c<d){
-        #r <- read.table(file1$datapath,sep=",",stringsAsFactors = FALSE,nrows=1,na.strings = c("NA",""))
         r <- read.table(file1$datapath,sep=",",stringsAsFactors = FALSE,nrows=1)
         SEP=","
       }else{
-        #r <- read.table(file1$datapath,sep="\t",stringsAsFactors = FALSE,nrows=1,na.strings = c("NA",""))
         r <- read.table(file1$datapath,sep="\t",stringsAsFactors = FALSE,nrows=1)
         SEP="\t"
       }
       
-      
-      #r1<-read.table(file1$datapath,sep=SEP,stringsAsFactors = FALSE,nrows=1,skip = 1,na.strings = c("NA",""))
       r1<-read.table(file1$datapath,sep=SEP,stringsAsFactors = FALSE,nrows=1,skip = 1)
       aciertos <- 0
       for(i in 1: ncol(r)){
@@ -391,19 +373,9 @@ server <- function(input, output, session){##1
       }
       updateCheckboxInput(session, inputId="header", value = HEADER) 
       
-      
-      # for(i in 1:ncol(r1)){
-      #   if(nchar(r1[1,i])==10 & substr(r1[1,i],5,5) =="-" & substr(r1[1,i],8,8) =="-"){r1[,i]=as.Date(r1[,i],format="%Y-%m-%d")}
-      # }
-      
-      
-      
-      
-      #data <- read.table(file1$datapath,sep=SEP,header=HEADER,na.strings = c("NA",""))
       data <- read.table(file1$datapath,sep=SEP,header=HEADER)
       
     }else{
-      #data <- read.table(file=file1$datapath,sep=input$sep,header=input$header,stringsAsFactors=input$stringsAsFactors,na.strings = c("NA",""))
       data <- read.table(file=file1$datapath,sep=input$sep,header=input$header,stringsAsFactors=input$stringsAsFactors)
     }
     
@@ -514,7 +486,7 @@ server <- function(input, output, session){##1
   # })
   
   #####################################################################
-  ################## HELP HOVER INSTRUCTIONS #######################
+  ##################### HELP HOVER INSTRUCTIONS #######################
   #####################################################################
   
   output$help_desc <- renderImage({ # When input$n is 1, filename is ./images/image1.jpeg
@@ -590,9 +562,7 @@ server <- function(input, output, session){##1
       
     }
     
-    # colnames(tipos) <- c("h")
     names <- print(as.vector(names(my.data())) ) 
-    #colnames(nombres) <- c("h")
     junte <- rbind(names,tipos)
     colnames(junte) <- names(my.data())
     junte <- as.data.frame(junte)
@@ -631,8 +601,6 @@ server <- function(input, output, session){##1
   
   output$choose_independent <- renderUI({
     
-    
-    ### VER MELHOR ISTO ###
     enteros <- c()
     
     for(j in 1:ncol(my.data())){
@@ -655,7 +623,6 @@ server <- function(input, output, session){##1
   
   output$choose_dependent <- renderUI({
     
-    ### VER MELHOR ISTO ###
     enteros <- c()
     
     for(j in 1:ncol(my.data())){
@@ -681,7 +648,6 @@ server <- function(input, output, session){##1
   output$choose_clu_vars <- renderUI({
     
     
-    ### VER MELHOR ISTO ###
     enteros <- c()
     
     for(j in 1:ncol(my.data())){
@@ -705,8 +671,6 @@ server <- function(input, output, session){##1
   
   output$choose_fact_vars <- renderUI({
     
-    
-    ### VER MELHOR ISTO ###
     enteros <- c()
     
     for(j in 1:ncol(my.data())){
@@ -789,8 +753,6 @@ server <- function(input, output, session){##1
     d <<- wordcloudfunc(my.data(),input$textvar)$df
     
     
-    #findFreqTerms(dtm, lowfreq = 4)
-    
     output$wordbarplot <- renderPlot({
       
       
@@ -819,14 +781,9 @@ server <- function(input, output, session){##1
   ##################################################################
   
   
-  
   output$choose_columns <- renderUI({
     
     seleccion <- names(my.data())
-    
-    #browser()
-    
-    # addPopover(session,"help",id="descinputs", title="Tip!", placement = "right", trigger = "hover", content=paste0("Select the Variable You need to Explore (Descriptive Analysis)!"))
     
     
     # Create the checkboxes and select them all by default
@@ -838,23 +795,19 @@ server <- function(input, output, session){##1
   })
   
   
-  ####################################################
+  #################################################################
   
-  
-  #################################################################################################################
-  
+ 
   observeEvent(input$godes,{
     
     if(is.null(my.data())){return()}
     
     output$plot1 <- renderPlot({
       if(is.null(my.data())){return()}
-      #browser()
       seleccion <- names(my.data())
       for(i in 1:ncol(my.data())){if(input$columns==seleccion[i]){minumero=i}}
       
       if(class(my.data()[,minumero])=="character" || class(my.data()[,minumero])=="factor"){
-        #Gender
         # Pie Chart from data frame with Appended Sample Sizes
         mytable <- table(my.data()[,minumero])
         lbls <- paste(names(mytable), "\n", mytable, sep="")
@@ -872,7 +825,7 @@ server <- function(input, output, session){##1
       }
     })
     
-    ###################################################################################################
+ ##################################################################
     
     
     output$plot2 <- renderPlot({
@@ -882,9 +835,7 @@ server <- function(input, output, session){##1
       if((class(my.data()[,minumero])=="character" || class(my.data()[,minumero])=="factor") && length(unique(my.data()[,minumero]))<=30){
         barplot(table(na.omit(my.data()[,minumero])),col=1:10, cex.names = 0.70,cex.axis = 0.70,
                 main=paste("Bar Plot of",seleccion[minumero], "Variable\n (with sample sizes)",sep=" "))
-        #Gender
-        # Pie Chart from data frame with Appended Sample Sizes
-      }else if((class(my.data()[,minumero])!="character" && class(my.data()[,minumero])!="factor") && length(unique(my.data()[,minumero]))<=10){
+        }else if((class(my.data()[,minumero])!="character" && class(my.data()[,minumero])!="factor") && length(unique(my.data()[,minumero]))<=10){
         barplot(table(na.omit(my.data()[,minumero])),col=1:10, cex.names = 0.70,cex.axis = 0.70,
                 main=paste("Bar Plot of",seleccion[minumero], "Variable\n (with sample sizes)",sep=" "))
       }else if((class(my.data()[,minumero])!="character" && class(my.data()[,minumero])!="factor") && length(unique(my.data()[,minumero]))>10){
@@ -962,16 +913,11 @@ server <- function(input, output, session){##1
       colnames(tablita) <- c(names(datanumerica))
       
       DT::datatable( tablita, options = list(scrollX = TRUE))
-    })
-    
-    ####################################################################################################
-    
+    })  
     
   })
   
   ############################################################################ 
-  
-  #################################################################################################################
   
   observeEvent(input$goinf,{
     
@@ -980,12 +926,10 @@ server <- function(input, output, session){##1
     
     
     output$Test <- renderPrint({
-      ##################################################################################################  
       if(is.null(my.data())){return()}
       seleccion <- names(my.data())
       for(i in 1:ncol(my.data())){if(input$var1type==seleccion[i]){var1type=i}}
       for(j in 1:ncol(my.data())){if(input$var2type==seleccion[j]){var2type=j}}
-      ################################################################################################   
       if(class(my.data()[,var1type])=="factor" && class(my.data()[,var2type])=="factor"){
         crosstbl <- table(my.data()[,var1type],my.data()[,var2type])
         crosstbl_matrix <-as.matrix(crosstbl)
@@ -1047,7 +991,7 @@ server <- function(input, output, session){##1
           
           
           
-         if(length(unique(aux.data[,var1type.name]))==2){###What do you mean with unique(var1)==2?
+         if(length(unique(aux.data[,var1type.name]))==2){
             #Mann-Whitney
             test <-  wilcox.test(aux.data[,var2type.name]~aux.data[,var1type.name])  #wilcox.test(y~A) where y is numeric and A is A binary factor (independent)
             test$data.name<-paste(seleccion[var2type],"by",seleccion[var1type],sep = " ")
@@ -1066,11 +1010,11 @@ server <- function(input, output, session){##1
         }else{#normal
           
           
-          if(length(unique(aux.data[,var1type.name]))==2){###What do you mean with unique(var1)==2?
+          if(length(unique(aux.data[,var1type.name]))==2){
             #ttest
             t.test(aux.data[,var2type.name]~aux.data[,var1type.name], var.equal=TRUE) # t.test(y~x) where y is numeric and x is a binary factor
             
-          }else if(length(unique(aux.data[,var1type.name]))>2){##What do you mean with unique(var1)>2?
+          }else if(length(unique(aux.data[,var1type.name]))>2){
             #Anova
             test<-aov(aux.data[,var2type.name] ~ aux.data[,var1type.name])     #"Anova"
             test$call <- paste("aov(formula = ",seleccion[var2type]," ~ ",seleccion[var1type],")",sep = "")
@@ -1082,8 +1026,7 @@ server <- function(input, output, session){##1
           }
         }
       }else if(
-        
-        ##################################################################################################################
+
         class(my.data()[,var2type])== "factor" && (class(my.data()[,var1type]) == "numeric"|| class(my.data()[,var1type]) == "integer" || class(my.data()[,var1type]) == "double")){
         
         #check normality for quantitative variable
@@ -1106,7 +1049,7 @@ server <- function(input, output, session){##1
         #https://stats.stackexchange.com/questions/232011/ties-should-not-be-present-in-one-sample-kolmgorov-smirnov-test-in-r
         if(p.value < 0.05){#not Normal
           
-          if(length(unique(na.omit(aux.data[,var2type.name])))==2){###What do you mean with unique(var1)==2?
+          if(length(unique(na.omit(aux.data[,var2type.name])))==2){
             #Mann-Whitney
             test <-  wilcox.test(aux.data[,var1type.name]~aux.data[,var2type.name])  #wilcox.test(y~A) where y is numeric and A is A binary factor (independent)
             test$data.name<-paste(seleccion[var1type],"by",seleccion[var2type],sep = " ")
@@ -1123,11 +1066,11 @@ server <- function(input, output, session){##1
           }
         }else{#normal
           
-          if(length(unique(aux.data[,var2type.name]))==2){###What do you mean with unique(var1)==2?
+          if(length(unique(aux.data[,var2type.name]))==2){
             #ttest
             t.test(aux.data[,var1type.name]~aux.data[,var2type.name], var.equal=TRUE) # t.test(y~x) where y is numeric and x is a binary factor
             
-          }else if(length(unique(aux.data[,var2type.name]))>2){##What do you mean with unique(var1)>2?
+          }else if(length(unique(aux.data[,var2type.name]))>2){
             #Anova
             test<-aov(aux.data[,var1type.name] ~ aux.data[,var2type.name])     #"Anova"
             test$call <- paste("aov(formula = ",seleccion[var1type]," ~ ",seleccion[var2type],")",sep = "")
@@ -1139,8 +1082,6 @@ server <- function(input, output, session){##1
           }
         }
       }else{
-        
-        #################################################################################################################
         
         if((class(my.data()[,var1type]) == "numeric"|| class(my.data()[,var1type]) == "integer" || class(my.data()[,var1type]) == "double") &&
            (class(my.data()[,var2type]) == "numeric"|| class(my.data()[,var2type]) == "integer" || class(my.data()[,var2type]) == "double")){
@@ -1200,23 +1141,11 @@ server <- function(input, output, session){##1
         }
       }
       
-      
-      
-      
-      
-      
-      #################################################################################################################
     })
-    
-    ##############################################
-    
-    
     
   })
   
   ############################################################################
-  
-  #################################################################################################################
   
   observeEvent(input$goreg,{
     
@@ -1249,7 +1178,6 @@ server <- function(input, output, session){##1
                             size = "l", easyClose = TRUE, fade = TRUE))
       return({})
     }  
-    #browser()
     source("./R_Modules/Clusterization/clust.R")
     
     reg.clust <<- clust(my.data(),input$cluvars)
@@ -1306,7 +1234,6 @@ server <- function(input, output, session){##1
         return({})
       }else{
         
-        #browser()
         source("./R_Modules/Exploratory_Factor_Analysis/efa.R")
         
         reg.efa <<- efa(my.data(),input$factvars)
@@ -1509,6 +1436,6 @@ server <- function(input, output, session){##1
   })  
   
   
-} ################cierra el server
+} ################closes server
 
 shinyApp(ui = ui, server = server)
