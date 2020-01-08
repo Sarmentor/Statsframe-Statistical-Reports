@@ -14,5 +14,17 @@ TODO
 - R Module for TimeSeries Analysis WtD
 - R Module for Confirmatory factor analysis WtD
 
+# Statsframe-Statistical-Reports (For Downloadable Executables; Several OS; Several Versions):
+
+https://statsframe.com/more-solutions/
+
+# Statsframe-Statistical-Reports (For Reporting Support Services):
+
+https://statsframe.com/support/
+
+# Statsframe-Statistical-Reports (Some Printscreens, Demo Reports and Others please check...):
+
+https://statsframe.com
+
 Enjoy!
 
