@@ -17,11 +17,12 @@ wordcloudfunc <- function(data,textvar){
   docs <- tm_map(docs, toSpace, "^ ") #match white space at begenning
   docs <- tm_map(docs, toSpace, " $") #match white space at the end
   docs <- tm_map(docs, PlainTextDocument)
+  docs <- tm_map(docs, content_transformer(tolower))
   docs <- tm_map(docs, removeNumbers)
   docs <- tm_map(docs, removePunctuation)
   docs <- tm_map(docs, toSpace, "http[[:alnum:]]*") #remove url from tweets
   docs <- tm_map(docs,removeWords,stopwords("english"))
-  docs <- tm_map(docs, content_transformer(tolower))
+
   
   tdm.tfidf <- TermDocumentMatrix(docs, control = list(weighting =
                                                    function(x)
